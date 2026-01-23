@@ -10,3 +10,11 @@ address: 127.0.0.1
 D
 port: 4000
 address: 127.0.0.1
+
+Links
+A: S1
+S1:B
+S1:S2
+S2:S3
+S3:C
+S3:D
