@@ -1,76 +1,80 @@
 import java.io.File;
+import java.net.InetSocketAddress;
 import java.util.*;
 
 public class Parser {
-    public static void main(String[] args) {
-        new Parser("s3");
-
-    }
+    private String specificID;
     private String ID;
     private int portNum;
     private String address;
+    private ArrayList<InetSocketAddress> neighbors = new ArrayList<>();
+    private static Map<String, Device> devices = new HashMap<>();
 
 
-    public Parser(String ID) {
-        try {
-            File config = new File("C:\\Users\\fashi\\Documents\\CS416Project1\\src\\config_file");
-            Scanner scanner = new Scanner(config);
-            Map<String, String[]> table = new HashMap<>();
-
-            while (scanner.hasNextLine()) {
-                if (scanner.nextLine().equals(ID)) {
-                    this.ID = ID;
-                    this.portNum = Integer.parseInt(scanner.nextLine().split(": ")[1]);
-                    this.address= scanner.nextLine().split(":")[1];
-                    table.put(ID, new String[]{Integer.toString(this.portNum), this.address});
-                    System.out.println(Arrays.toString(table.get("s2")));
-                    break;
-                }
-                else {
-                    System.out.println("lol");
-
-                }
-            }
-
-        }
-        catch (Exception e){ e.printStackTrace();
-        }
+    public Parser(String specificID) {
+        this.specificID = specificID;
+        fetchInfo();
     }
 
-
-
+    /* Parse the config file's info */
     private void fetchInfo() {
         try {
-            File config = new File("C:\\Users\\fashi\\Documents\\CS416Project1\\src\\config_file");
+            File config = new File("C:\\Users\\冷卓凇\\IdeaProjects\\CS416_project1\\src\\config_file");
             Scanner scanner = new Scanner(config);
-
-
+            String currLine;
 
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
-
-                if (line.equals("Links")) break;
-                if (line.isEmpty()) continue;
-
-                String nodeId = this.ID;
-                String portNum = this.ID + ":" + line.split(":")[0];
-                String address = scanner.nextLine().split(":")[1];
-
-
-
+                currLine = scanner.nextLine();
+                if (currLine.isBlank()) {
+                    while (scanner.hasNextLine()) {
+                        currLine = scanner.nextLine();
+                        parseLink(scanner, currLine);
+                    }
+                } else if (currLine.length() <= 2) {
+                    parseDevice(scanner, currLine);
+                }
             }
-
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public String getAddress() {
-        return address;
+    /* Fetch the info of all devices and store them into Map: devices */
+    private void parseDevice(Scanner scanner, String currLine) {
+        this.ID = currLine;
+        this.portNum = Integer.parseInt(scanner.nextLine().split(": ")[1]);
+        this.address= scanner.nextLine().split(": ")[1];
+
+        Device device = new Device(ID, address, portNum);
+        devices.putIfAbsent(ID, device);
+    }
+
+    /* Find the link relation of specific device and store relevant device's info into ArrayList: neighbors */
+    private void parseLink(Scanner scanner, String currLine) {
+        String neighborID;
+        int neighborPort;
+        String neighborAdr;
+        InetSocketAddress neighbor;
+        String[] parts = currLine.split(":");
+
+        if (!parts[0].equals("Links")) {
+            if (parts[0].equals(specificID) || parts[1].equals(specificID)) {
+                neighborID = parts[1].equals(specificID) ? parts[0] : parts[1];
+                neighborPort = devices.get(neighborID).getPort();
+                neighborAdr = devices.get(neighborID).getAddress();
+
+                neighbor = new InetSocketAddress(neighborAdr, neighborPort);
+                neighbors.add(neighbor);
+            }
+        }
+    }
+
+    public ArrayList getNeighbors() {
+        return neighbors;
     }
 
     public int getPortNum() {
-        return portNum;
+        return devices.get(specificID).getPort();
     }
 }

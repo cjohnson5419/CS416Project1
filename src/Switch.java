@@ -1,6 +1,7 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ public class Switch {
         String ID = args[0];
         Parser parser = new Parser(ID);
         int portNum = parser.getPortNum();
-        InetSocketAddress[] neighbors = parser.getNeighbors();
+        ArrayList<InetSocketAddress> neighbors = parser.getNeighbors();
         DatagramSocket socket = new DatagramSocket(portNum);
 
         while (true) {
@@ -29,9 +30,9 @@ public class Switch {
                 sendPacket(socket, frame, target);
             }
             else {
-                for (int i = 0; i < neighbors.length; i++) {
-                    if (!neighbors[i].equals(sender)) {
-                        sendPacket(socket, frame, neighbors[i]);
+                for (int i = 0; i < neighbors.size(); i++) {
+                    if (!neighbors.get(i).equals(sender)) {
+                        sendPacket(socket, frame, neighbors.get(i));
                     }
                 }
             }
