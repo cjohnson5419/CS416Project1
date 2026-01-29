@@ -25,10 +25,12 @@ public class Host {
                     String dstMAC = info[1];
                     String message = info[2];
 
-                    System.out.println("\n[Received] From " + srcMAC + ": " + message);
+
 
                     if (!dstMAC.equals(ID)) {
                         System.out.println("DEBUG: MAC mismatch. Destination was " + dstMAC);
+                    } else {
+                        System.out.println("\n[Received] From " + srcMAC + ": " + message);
                     }
                 }
             } catch (Exception e) { e.printStackTrace(); }

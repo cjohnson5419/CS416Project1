@@ -19,7 +19,7 @@ public class Parser {
     /* Parse the config file's info */
     private void fetchInfo() {
         try {
-            File config = new File("C:\\Users\\冷卓凇\\IdeaProjects\\CS416_project1\\src\\config_file");
+            File config = new File("src\\config_file");
             Scanner scanner = new Scanner(config);
             String currLine;
 
