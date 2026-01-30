@@ -7,12 +7,15 @@ import java.util.Map;
 
 public class Switch {
     public static void main(String[] args) throws Exception {
-        Map<String, InetSocketAddress> table = new HashMap<>();
         String ID = args[0];
         Parser parser = new Parser(ID);
+
+        Map<String, InetSocketAddress> table = new HashMap<>();
         int portNum = parser.getPortNum();
         ArrayList<InetSocketAddress> neighbors = parser.getNeighbors();
         DatagramSocket socket = new DatagramSocket(portNum);
+
+        System.out.println("Switch " + ID + " started on port " + portNum);
 
         while (true) {
             DatagramPacket packetReceived = receivePacket(socket);
