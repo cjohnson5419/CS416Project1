@@ -16,8 +16,17 @@ public class Switch {
         DatagramSocket socket = new DatagramSocket(portNum);
 
         System.out.println("Switch " + ID + " started on port " + portNum);
+        System.out.println("Neighbors:\n");
+        for (int i = 0; i < neighbors.size(); i++) {
+            System.out.println(neighbors.get(i));
+        }
+        System.out.println();
 
         while (true) {
+            System.out.println("\nTable");
+            System.out.println(table);
+            System.out.println();
+
             DatagramPacket packetReceived = receivePacket(socket);
             String frame = new String(packetReceived.getData(), 0, packetReceived.getLength());
 
