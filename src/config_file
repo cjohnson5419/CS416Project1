@@ -1,26 +1,44 @@
 A
 port: 1000
-address: 10.222.113.112
+IP address: 10.222.28.37
+MAC address:
 B
 port: 2000
-address: 10.222.88.189
+IP address: 10.222.88.189
+MAC address:
 C
 port: 3000
-address: 10.222.73.28
+IP address: 10.222.73.28
+MAC address:
 D
 port: 4000
-address: 10.222.36.247
+IP address: 10.222.94.78
+MAC address:
 S1
 port: 5000
 address: 10.222.73.28
 S2
 port: 6000
-address: 10.222.73.28
+address: 10.222.94.78
 S3
 port: 7000
-address: 10.222.73.28
+address: 10.222.28.37
+R1
+net1.R1: 8000
+net2.R1: 8100
+IP address:
+MAC address:
+R2
+net2.R2: 9000
+net3.R2: 9100
+IP address:
+MAC address:
 
 Links
+S1:net1.R1
+net2.R1:net2.R2
+net3.R2:net3.R2
+S2:net3.R2
 S1:A
 S1:B
 S1:S2
