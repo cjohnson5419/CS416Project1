@@ -5,9 +5,9 @@ public class Device {
     private String id;
     private String realIP;
     private int realPort;
-    private String virtualIP;           // for hosts: e.g. net1.A
-    private String gateway;             // for hosts: e.g. net1.R1
-    private List<String> virtualPorts;  // for routers: e.g. [net1.R1, net2.R1]
+    private String virtualIP;
+    private String gateway;
+    private List<String> virtualPorts;
 
     public Device(String id, String realIP, int realPort) {
         this.id = id;
