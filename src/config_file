@@ -1,6 +1,6 @@
 A
 port: 1000
-address: 10.222.113.112
+address: 10.222.28.37
 B
 port: 2000
 address: 10.222.88.189
@@ -9,16 +9,16 @@ port: 3000
 address: 10.222.73.28
 D
 port: 4000
-address: 10.222.36.247
+address: 10.222.94.78
 S1
 port: 5000
 address: 10.222.73.28
 S2
 port: 6000
-address: 10.222.73.28
+address: 10.222.94.78
 S3
 port: 7000
-address: 10.222.73.28
+address: 10.222.28.37
 
 Links
 S1:A
