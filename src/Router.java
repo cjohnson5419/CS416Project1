@@ -16,13 +16,13 @@ public class Router {
         DatagramSocket socket = new DatagramSocket(portNum);
 
         if (ID.equals("R1")) {
-            forwardingTable.put("net1", "S1:S1realAdr:5000");
-            forwardingTable.put("net2", "R2:R2realAdr:8000");
-            forwardingTable.put("net3", "R2:R2realAdr:8000");
+            forwardingTable.put("net1", "S1:10.222.55.163:5000");
+            forwardingTable.put("net2", "R2:10.222.94.78:9000");
+            forwardingTable.put("net3", "R2:10.222.94.78:9000");
         } else if (ID.equals("R2")) {
-            forwardingTable.put("net1", "R1:R1realAdr:7000");
-            forwardingTable.put("net2", "R1:R1realAdr:7000");
-            forwardingTable.put("net3", "S2:S2realAdr:6000");
+            forwardingTable.put("net1", "R1:10.222.28.37:8000");
+            forwardingTable.put("net2", "R1:10.222.28.37:8000");
+            forwardingTable.put("net3", "S2:10.222.94.78:6000");
         }
 
         System.out.println("Router " + ID + " started on port " + portNum);

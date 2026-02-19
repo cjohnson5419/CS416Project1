@@ -3,43 +3,35 @@ real_ip: 10.222.28.37
 real_port: 1000
 virtual_ip: net1.A
 gateway: net1.R1
-
 B
 real_ip: 10.222.88.189
 real_port: 2000
 virtual_ip: net1.B
 gateway: net1.R1
-
 C
-real_ip: 10.222.73.28
+real_ip: 10.222.55.163
 real_port: 3000
 virtual_ip: net3.C
 gateway: net3.R2
-
 D
 real_ip: 10.222.94.78
 real_port: 4000
 virtual_ip: net3.D
 gateway: net3.R2
-
 S1
-real_ip: 10.222.73.28
+real_ip: 10.222.55.163
 real_port: 5000
-
 S2
 real_ip: 10.222.94.78
 real_port: 6000
-
-
 R1
 real_ip: 10.222.28.37
 real_port: 8000
-virtual_ip:net1.R1,net2.R1
-
+virtual_ip: net1.R1,net2.R1
 R2
 real_ip: 10.222.94.78
 real_port: 9000
-virtual_ip:net2.R2,net3.R2
+virtual_ip: net2.R2,net3.R2
 
 Links
 S1:A
