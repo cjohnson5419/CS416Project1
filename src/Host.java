@@ -6,15 +6,23 @@ import java.util.Scanner;
 
 public class Host {
     public static void main(String[] args) throws Exception {
+        if (args.length < 1) {
+            System.out.println("Usage: java Host <ID>");
+            return;
+        }
+
         String ID = args[0];
         Parser parser = new Parser(ID);
-        int portNum = parser.getPortNum();
+
+        int realPort = parser.getPortNum();
         ArrayList<InetSocketAddress> neighbors = parser.getNeighbors();
-        DatagramSocket socket = new DatagramSocket(portNum);
+        DatagramSocket socket = new DatagramSocket(realPort);
 
-        String virtualIP = "net1." + ID;
+        String myVirtualIP = Parser.getDevice(ID).getVirtualIP();
+        String myGateway = Parser.getDevice(ID).getGateway();
 
-        System.out.println("Host " + ID + " (IP: " + virtualIP + ") started on port " + portNum);
+        System.out.println("Host " + ID + " (IP: " + myVirtualIP + ") started on port " + realPort);
+        System.out.println("Default Gateway: " + myGateway);
 
         new Thread(() -> {
             try {
@@ -31,30 +39,30 @@ public class Host {
                     String message = info[4];
 
                     if (dstMAC.equals(ID)) {
-                        System.out.println("\n[Message Received]");
-                        System.out.println("From Source Host: " + srcMAC + " (IP: " + srcIP + ")");
-                        System.out.println("Message: " + message);
+                        System.out.println("\n[Received] From " + srcIP + " (MAC: " + srcMAC + "): " + message);
                     } else {
-                        System.out.println("\n[DEBUG] Flooded frame received. Destination MAC (" + dstMAC + ") " +
-                                "does not match my MAC (" + ID + "). Ignoring payload.");
+                        System.out.println("\n[DEBUG] MAC Mismatch. Destination was " + dstMAC + ". (Flooded frame)");
                     }
-
-                    System.out.print("\nEnter <DestMAC> <DestIP> <Message>: ");
+                    System.out.print("Enter <DestIP> <Message>: ");
                 }
-            } catch (Exception e) {
-                System.err.println("Receiver error: " + e.getMessage());
-            }
+            } catch (Exception e) { e.printStackTrace(); }
         }).start();
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.print("Enter <DestMAC> <DestIP> <Message> (e.g., R1 net3.D hello!): ");
+            System.out.print("Enter <DestIP> <Message>: ");
+            String destIP = scanner.next();
+            String message = scanner.nextLine().trim();
 
-            String destMAC = scanner.next();   // R1
-            String destIP = scanner.next();    // net3.D
-            String message = scanner.nextLine().trim(); // hello!
+            String destMAC;
+            String myNetwork = myVirtualIP.split("\\.")[0];
+            if (destIP.startsWith(myNetwork)) {
+                destMAC = destIP.split("\\.")[1];
+            } else {
+                destMAC = myGateway.split("\\.")[1];
+            }
 
-            String frame = ID + ":" + destMAC + ":" + virtualIP + ":" + destIP + ":" + message;
+            String frame = ID + ":" + destMAC + ":" + myVirtualIP + ":" + destIP + ":" + message;
 
             for (InetSocketAddress neighbor : neighbors) {
                 sendPacket(socket, frame, neighbor);

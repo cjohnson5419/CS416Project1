@@ -86,4 +86,8 @@ public class Parser {
     public int getPortNum() {
         return devices.get(specificID).getRealPort();
     }
+
+    public static Device getDevice(String id) {
+        return devices.get(id);
+    }
 }
