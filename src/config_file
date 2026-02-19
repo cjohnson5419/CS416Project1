@@ -30,9 +30,6 @@ S2
 real_ip: 10.222.94.78
 real_port: 6000
 
-S3
-real_ip: 10.222.28.37
-real_port: 7000
 
 R1
 real_ip: 10.222.28.37
