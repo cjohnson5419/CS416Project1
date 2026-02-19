@@ -5,8 +5,11 @@ import java.util.*;
 public class Parser {
     private String specificID;
     private String ID;
-    private int portNum;
+    private String realIP;
+    private int realPort;
+    private String virtualIP;
     private String address;
+    private String getaway;
     private ArrayList<InetSocketAddress> neighbors = new ArrayList<>();
     private static Map<String, Device> devices = new HashMap<>();
 
@@ -43,11 +46,13 @@ public class Parser {
     /* Fetch the info of all devices and store them into Map: devices */
     private void parseDevice(Scanner scanner, String currLine) {
         this.ID = currLine;
-        this.address= scanner.nextLine().split(": ")[1];
-        this.portNum = Integer.parseInt(scanner.nextLine().split(": ")[1]);
+        this.realIP= scanner.nextLine().split(": ")[1];
+        this.realPort = Integer.parseInt(scanner.nextLine().split(": ")[1]);
+        this.virtualIP = scanner.nextLine().split(": ")[1];
+        this.getaway = scanner.nextLine().split(": ")[1];
         //this.address= scanner.nextLine().split(": ")[1];
 
-        Device device = new Device(ID, address, portNum);
+        Device device = new Device(ID, realIP, realPort);
         devices.putIfAbsent(ID, device);
     }
 
