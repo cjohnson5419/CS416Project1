@@ -1,27 +1,31 @@
-import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Device {
-    private String id;           // Device ID ( "A", "S1")
-    private String address;      // IP address
-    private int port;
+    private String id;
+    private String realIP;
+    private int realPort;
+    private String virtualIP;
+    private String gateway;
+    private List<String> virtualPorts;
 
-
-    public Device(String id, String address, int port) {
+    public Device(String id, String realIP, int realPort) {
         this.id = id;
-        this.address = address;
-        this.port = port;
+        this.realIP = realIP;
+        this.realPort = realPort;
+        this.virtualPorts = new ArrayList<>();
     }
 
+    public String getId()            { return id; }
+    public String getRealIP()        { return realIP; }
+    public int getRealPort()         { return realPort; }
 
-    public String getId() {
-        return id;
-    }
+    public String getVirtualIP()     { return virtualIP; }
+    public void setVirtualIP(String v) { this.virtualIP = v; }
 
-    public String getAddress() {
-        return address;
-    }
+    public String getGateway()       { return gateway; }
+    public void setGateway(String g) { this.gateway = g; }
 
-    public int getPort() {
-        return port;
-    }
+    public List<String> getVirtualPorts()          { return virtualPorts; }
+    public void setVirtualPorts(List<String> vp)   { this.virtualPorts = vp; }
 }
