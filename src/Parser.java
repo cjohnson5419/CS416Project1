@@ -43,8 +43,9 @@ public class Parser {
     /* Fetch the info of all devices and store them into Map: devices */
     private void parseDevice(Scanner scanner, String currLine) {
         this.ID = currLine;
-        this.portNum = Integer.parseInt(scanner.nextLine().split(": ")[1]);
         this.address= scanner.nextLine().split(": ")[1];
+        this.portNum = Integer.parseInt(scanner.nextLine().split(": ")[1]);
+        //this.address= scanner.nextLine().split(": ")[1];
 
         Device device = new Device(ID, address, portNum);
         devices.putIfAbsent(ID, device);
@@ -61,8 +62,8 @@ public class Parser {
         if (!parts[0].equals("Links")) {
             if (parts[0].equals(specificID) || parts[1].equals(specificID)) {
                 neighborID = parts[1].equals(specificID) ? parts[0] : parts[1];
-                neighborPort = devices.get(neighborID).getPort();
-                neighborAdr = devices.get(neighborID).getAddress();
+                neighborPort = devices.get(neighborID).getRealPort();
+                neighborAdr = devices.get(neighborID).getVirtualIP();
 
                 neighbor = new InetSocketAddress(neighborAdr, neighborPort);
                 neighbors.add(neighbor);
@@ -75,6 +76,6 @@ public class Parser {
     }
 
     public int getPortNum() {
-        return devices.get(specificID).getPort();
+        return devices.get(specificID).getRealPort();
     }
 }
