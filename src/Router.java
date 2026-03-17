@@ -12,8 +12,10 @@ public class Router {
 
         Map<String, String> forwardingTable = new HashMap<>();
         int portNum = parser.getPortNum();
-        ArrayList<InetSocketAddress> neighbors = parser.getNeighbors();
+        Map<String, InetSocketAddress> neighbors = parser.getNeighbors();
         DatagramSocket socket = new DatagramSocket(portNum);
+
+        RoutingTables routingTables = new RoutingTables(parser);
 
         if (ID.equals("R1")) {
             forwardingTable.put("net1", "S1:10.222.55.163:5000");

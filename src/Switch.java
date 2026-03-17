@@ -12,7 +12,7 @@ public class Switch {
 
         Map<String, InetSocketAddress> table = new HashMap<>();
         int portNum = parser.getPortNum();
-        ArrayList<InetSocketAddress> neighbors = parser.getNeighbors();
+        Map<String, InetSocketAddress> neighbors = parser.getNeighbors();
         DatagramSocket socket = new DatagramSocket(portNum);
 
         System.out.println("Switch " + ID + " started on port " + portNum);

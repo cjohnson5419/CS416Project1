@@ -9,7 +9,7 @@ public class Parser {
     private int realPort;
     private String virtualIP = null;
     private String gateway = null;
-    private ArrayList<InetSocketAddress> neighbors = new ArrayList<>();
+    private Map<String, InetSocketAddress> neighbors = new HashMap<>();
     private static Map<String, Device> devices = new HashMap<>();
 
 
@@ -74,13 +74,21 @@ public class Parser {
                 neighborAdr = devices.get(neighborID).getRealIP();
 
                 neighbor = new InetSocketAddress(neighborAdr, neighborPort);
-                neighbors.add(neighbor);
+                neighbors.put(neighborID, neighbor);
             }
         }
     }
 
-    public ArrayList getNeighbors() {
+    private void parseSubNet(String currLine, String neighborID) {
+        String[] parts = currLine.split(":");
+    }
+
+    public Map getNeighbors() {
         return neighbors;
+    }
+
+    public String getVirtualIP() {
+        return virtualIP;
     }
 
     public int getPortNum() {
