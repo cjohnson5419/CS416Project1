@@ -48,9 +48,9 @@ public class Parser {
         this.realIP = scanner.nextLine().split(": ")[1];
         this.realPort = Integer.parseInt(scanner.nextLine().split(": ")[1]);
 
-        if (!ID.equals("S1") && !ID.equals("S2")) {
+        if (!ID.equals("S1") && !ID.equals("S2") && !ID.equals("S3")) {
             this.virtualIP = scanner.nextLine().split(": ")[1];
-            if (!ID.equals("R1") && !ID.equals("R2")) {
+            if (!ID.equals("R1") && !ID.equals("R2") && !ID.equals("R3") && !ID.equals("R4") && !ID.equals("R5") && !ID.equals("R6")) {
                 this.gateway = scanner.nextLine().split(": ")[1];
             }
         }
