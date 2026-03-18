@@ -1,9 +1,9 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Host {
     public static void main(String[] args) throws Exception {
@@ -16,7 +16,7 @@ public class Host {
         Parser parser = new Parser(ID);
 
         int realPort = parser.getPortNum();
-        Map<String, InetSocketAddress> neighbors = parser.getNeighbors();
+        Set<Map.Entry<String, InetSocketAddress>> neighbors = parser.getNeighbors().entrySet();
         DatagramSocket socket = new DatagramSocket(realPort);
 
         String myVirtualIP = Parser.getDevice(ID).getVirtualIP();
@@ -65,9 +65,8 @@ public class Host {
 
             String frame = ID + ":" + destMAC + ":" + myVirtualIP + ":" + destIP + ":" + message;
 
-            for (int i = 0; i < neighbors.size(); i++) {
-                InetSocketAddress neighbor = neighbors.get(i);
-                sendPacket(socket, frame, neighbor);
+            for (Map.Entry<String, InetSocketAddress> neighbor : neighbors) {
+                sendPacket(socket, frame, neighbor.getValue());
             }
         }
     }

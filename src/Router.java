@@ -1,9 +1,9 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Router {
     public static void main(String[] args) throws Exception {
@@ -12,10 +12,8 @@ public class Router {
 
         Map<String, String> forwardingTable = new HashMap<>();
         int portNum = parser.getPortNum();
-        Map<String, InetSocketAddress> neighbors = parser.getNeighbors();
+        Set<Map.Entry<String, InetSocketAddress>> neighbors = parser.getNeighbors().entrySet();
         DatagramSocket socket = new DatagramSocket(portNum);
-
-        RoutingTables routingTables = new RoutingTables(parser);
 
         if (ID.equals("R1")) {
             forwardingTable.put("net1", "S1:10.222.55.163:5000");
@@ -29,8 +27,8 @@ public class Router {
 
         System.out.println("Router " + ID + " started on port " + portNum);
         System.out.println("Neighbors:\n");
-        for (int i = 0; i < neighbors.size(); i++) {
-            System.out.println(neighbors.get(i));
+        for (Map.Entry<String, InetSocketAddress> neighbor : neighbors) {
+            System.out.println(neighbor.getKey() + ": " + neighbor.getValue());
         }
         System.out.println();
 
@@ -46,6 +44,7 @@ public class Router {
             String message = info[4];
 
             if (!dstMAC.equals(ID)) {
+                System.out.println("Error: IP mismatch!");
                 continue;
             }
 
@@ -57,13 +56,13 @@ public class Router {
             String[] dstIPInfo = dstIP.split("\\.");
 
             if (ID.equals("R1")) {
-                 if (dstIP.contains("net1")) {
-                     dstMAC = dstIPInfo[1];
-                     receiver = buildReceiver(forwardingTable, "net1");
-                 } else if (dstIP.contains("net3")) {
-                     dstMAC = forwardingTable.get("net3").split(":")[0];
-                     receiver = buildReceiver(forwardingTable, "net3");
-                 }
+                if (dstIP.contains("net1")) {
+                    dstMAC = dstIPInfo[1];
+                    receiver = buildReceiver(forwardingTable, "net1");
+                } else if (dstIP.contains("net3")) {
+                    dstMAC = forwardingTable.get("net3").split(":")[0];
+                    receiver = buildReceiver(forwardingTable, "net3");
+                }
             } else if (ID.equals("R2")) {
                 if (dstIP.contains("net3")) {
                     dstMAC = dstIPInfo[1];

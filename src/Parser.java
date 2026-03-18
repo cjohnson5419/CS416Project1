@@ -79,16 +79,8 @@ public class Parser {
         }
     }
 
-    private void parseSubNet(String currLine, String neighborID) {
-        String[] parts = currLine.split(":");
-    }
-
     public Map getNeighbors() {
         return neighbors;
-    }
-
-    public String getVirtualIP() {
-        return virtualIP;
     }
 
     public int getPortNum() {

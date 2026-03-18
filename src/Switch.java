@@ -1,9 +1,9 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Switch {
     public static void main(String[] args) throws Exception {
@@ -12,13 +12,13 @@ public class Switch {
 
         Map<String, InetSocketAddress> table = new HashMap<>();
         int portNum = parser.getPortNum();
-        Map<String, InetSocketAddress> neighbors = parser.getNeighbors();
+        Set<Map.Entry<String, InetSocketAddress>> neighbors = parser.getNeighbors().entrySet();
         DatagramSocket socket = new DatagramSocket(portNum);
 
         System.out.println("Switch " + ID + " started on port " + portNum);
         System.out.println("Neighbors:\n");
-        for (int i = 0; i < neighbors.size(); i++) {
-            System.out.println(neighbors.get(i));
+        for (Map.Entry<String, InetSocketAddress> neighbor : neighbors) {
+            System.out.println(neighbor.getKey() + ": " + neighbor.getValue());
         }
         System.out.println();
 
@@ -42,9 +42,9 @@ public class Switch {
                 sendPacket(socket, frame, target);
             }
             else {
-                for (int i = 0; i < neighbors.size(); i++) {
-                    if (!neighbors.get(i).equals(sender)) {
-                        sendPacket(socket, frame, neighbors.get(i));
+                for (Map.Entry<String, InetSocketAddress> neighbor : neighbors) {
+                    if (!neighbor.getValue().equals(sender)) {
+                        sendPacket(socket, frame, neighbor.getValue());
                     }
                 }
             }
