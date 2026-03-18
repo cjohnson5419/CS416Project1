@@ -1,37 +1,59 @@
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class RoutingTable {
-    private Map<String, String> forwardingTable = new HashMap<>();
-    private Parser parser;
     private String ID;
+    private Parser parser;
+    private Set<String> localNetworks=new HashSet<>();
+    private Map<String, Integer> dvTable = new HashMap<>();
+    private Map<String, String> nextHopTable = new HashMap<>();
+    private Map<String, Map<String, Integer>> neighborDVs = new HashMap<>();
+
+    private static final List<String> ALL_NETWORKS = Arrays.asList(
+            "net1", "net2", "net3", "net4", "net5",
+            "net6", "net7", "net8", "net9", "net10"
+    );
+
+    private final int INFINITY=Integer.MAX_VALUE;
 
     public RoutingTable(Parser parser, String ID) {
         this.ID = ID;
         this.parser = parser;
-        getTable();
+        initTable();
     }
 
-    private void getTable() {
-        String destinations = null;
+    private void initTable() {
         Set<Map.Entry<String, InetSocketAddress>> neighbors = parser.getNeighbors().entrySet();
         String[] virtualIPInfo = parser.getDevice(ID).getVirtualIP().split(",");
 
+        for (String vip : virtualIPInfo) {
+            String subNet = vip.trim().split("\\.")[0];
+            localNetworks.add(subNet);
+        }
+
         for (Map.Entry<String, InetSocketAddress> neighbor : neighbors) {
             String neighborVIPInfo = parser.getDevice(neighbor.getKey()).getVirtualIP();
-
-            for (int i = 0; i < virtualIPInfo.length; i++) {
-                String subNet = virtualIPInfo[i].split("\\.")[0];
-
-                if (neighborVIPInfo == null || neighborVIPInfo.contains(subNet)) {
-                    destinations = subNet;
-                    break;
+            for (String vip : virtualIPInfo) {
+                String subNet = vip.trim().split("\\.")[0];
+                if (neighborVIPInfo != null && neighborVIPInfo.contains(subNet)) {
+                    dvTable.put(subNet, 1);
+                    nextHopTable.put(subNet, neighbor.getKey());
                 }
             }
-            forwardingTable.putIfAbsent(destinations, neighbor.getKey() + neighbor.getValue());
         }
-        System.out.println(forwardingTable.toString());
+        for (String net : ALL_NETWORKS) {
+            if (!dvTable.containsKey(net)) {
+                if (localNetworks.contains(net)) {
+                    dvTable.put(net, 1);
+                    nextHopTable.put(net, "local");
+                } else {
+                    dvTable.put(net, INFINITY);
+                }
+            }
+        }
+
+        System.out.println("Initial DV table: " + dvTable);
+        System.out.println("Initial Forwarding table: " + nextHopTable);
     }
+
 }
