@@ -14,7 +14,7 @@ public class RoutingTable {
             "net6", "net7", "net8", "net9", "net10"
     );
 
-    private final int INFINITY=Integer.MAX_VALUE;
+    private final int INFINITY=-1;
 
     public RoutingTable(Parser parser, String ID) {
         this.ID = ID;
