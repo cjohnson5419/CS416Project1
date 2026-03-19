@@ -9,21 +9,12 @@ public class Router {
     public static void main(String[] args) throws Exception {
         String ID = args[0];
         Parser parser = new Parser(ID);
+        RoutingTable routingTables = new RoutingTable(parser, ID);
 
         Map<String, String> forwardingTable = new HashMap<>();
         int portNum = parser.getPortNum();
         Set<Map.Entry<String, InetSocketAddress>> neighbors = parser.getNeighbors().entrySet();
         DatagramSocket socket = new DatagramSocket(portNum);
-
-        if (ID.equals("R1")) {
-            forwardingTable.put("net1", "S1:10.222.55.163:5000");
-            forwardingTable.put("net2", "R2:10.222.94.78:9000");
-            forwardingTable.put("net3", "R2:10.222.94.78:9000");
-        } else if (ID.equals("R2")) {
-            forwardingTable.put("net1", "R1:10.222.28.37:8000");
-            forwardingTable.put("net2", "R1:10.222.28.37:8000");
-            forwardingTable.put("net3", "S2:10.222.94.78:6000");
-        }
 
         System.out.println("Router " + ID + " started on port " + portNum);
         System.out.println("Neighbors:\n");
@@ -32,11 +23,35 @@ public class Router {
         }
         System.out.println();
 
+        new Thread(() -> {
+            try {
+                while (true) {
+                    String DVTable = routingTables.getDVTable();
+
+                    for (Map.Entry<String, InetSocketAddress> neighbor : neighbors) {
+                        if (neighbor.getKey().contains("S")) {
+                            continue;
+                        }
+
+                        InetSocketAddress neighborAddress = neighbor.getValue();
+                        String message =  "DV" + "/" + DVTable;
+                        String DVFrame = ID + ":" + neighbor.getKey() + ":0.0.0.0:0.0.0.0:" + message;
+
+                        sendPacket(socket, DVFrame, neighborAddress);
+                    }
+
+                    Thread.sleep(5000);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+
         while (true) {
             DatagramPacket packetReceived = receivePacket(socket);
             String originalFrame = new String(packetReceived.getData(), 0, packetReceived.getLength());
 
-            String[] info = originalFrame.split(":");
+            String[] info = originalFrame.split(":", 5);
             String srcMAC = info[0];
             String dstMAC = info[1];
             String srcIP = info[2];
@@ -45,6 +60,11 @@ public class Router {
 
             if (!dstMAC.equals(ID)) {
                 System.out.println("Error: IP mismatch!");
+                continue;
+            }
+
+            if (message.startsWith("DV/")) {
+                routingTables.updateForwardingTable(srcMAC, message);
                 continue;
             }
 

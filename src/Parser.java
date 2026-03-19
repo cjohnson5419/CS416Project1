@@ -57,6 +57,8 @@ public class Parser {
 
         Device device = new Device(ID, realIP, realPort, virtualIP, gateway);
         devices.putIfAbsent(ID, device);
+
+        this.virtualIP = null;
     }
 
     /* Find the link relation of specific device and store relevant device's info into ArrayList: neighbors */

@@ -46,7 +46,9 @@ public class Host {
                     }
                     System.out.print("Enter <DestIP> <Message>: ");
                 }
-            } catch (Exception e) { e.printStackTrace(); }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }).start();
 
         Scanner scanner = new Scanner(System.in);
