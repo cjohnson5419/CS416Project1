@@ -11,7 +11,8 @@ public class Router {
         Parser parser = new Parser(ID);
         RoutingTable routingTables = new RoutingTable(parser, ID);
 
-        Map<String, String> forwardingTable = new HashMap<>();
+        Map<String, String> forwardingTable;
+        Set<Map.Entry<String, String>> forwardingTableSet;
         int portNum = parser.getPortNum();
         Set<Map.Entry<String, InetSocketAddress>> neighbors = parser.getNeighbors().entrySet();
         DatagramSocket socket = new DatagramSocket(portNum);
@@ -75,7 +76,19 @@ public class Router {
             InetSocketAddress receiver = null;
             String[] dstIPInfo = dstIP.split("\\.");
 
-            if (ID.equals("R1")) {
+            forwardingTable = routingTables.getForwardingTable();
+            forwardingTableSet = forwardingTable.entrySet();
+
+            for (Map.Entry<String, String> row : forwardingTableSet) {
+                if (dstIP.contains(row.getKey())) {
+                    String[] value = row.getValue().split("/");
+                    dstMAC = value[0].trim();
+                    receiver = buildReceiver(forwardingTable, row.getKey());
+                    break;
+                }
+            }
+
+            /*if (ID.equals("R1")) {
                 if (dstIP.contains("net1")) {
                     dstMAC = dstIPInfo[1];
                     receiver = buildReceiver(forwardingTable, "net1");
@@ -91,7 +104,7 @@ public class Router {
                     dstMAC = forwardingTable.get("net1").split(":")[0];
                     receiver = buildReceiver(forwardingTable, "net1");
                 }
-            }
+            }*/
 
             System.out.println("New Frame:");
             printFrame(srcMAC, dstMAC, srcIP, dstIP, message);
