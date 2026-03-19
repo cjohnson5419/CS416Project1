@@ -83,6 +83,11 @@ public class Router {
                 if (dstIP.contains(row.getKey())) {
                     String[] value = row.getValue().split("/");
                     dstMAC = value[0].trim();
+
+                    if (dstMAC.contains("S")) {
+                        dstMAC = dstIPInfo[1];
+                    }
+
                     receiver = buildReceiver(forwardingTable, row.getKey());
                     break;
                 }
@@ -140,7 +145,7 @@ public class Router {
     }
 
     private static InetSocketAddress buildReceiver(Map<String, String> forwardingTable, String nxtIP) {
-        String[] nxtPortInfo = forwardingTable.get(nxtIP).split(":");
-        return new InetSocketAddress(nxtPortInfo[1], Integer.parseInt(nxtPortInfo[2]));
+        String[] nxtPortInfo = forwardingTable.get(nxtIP).split("/")[1].split(":");
+        return new InetSocketAddress(nxtPortInfo[0], Integer.parseInt(nxtPortInfo[1]));
     }
 }
