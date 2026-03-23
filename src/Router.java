@@ -93,24 +93,6 @@ public class Router {
                 }
             }
 
-            /*if (ID.equals("R1")) {
-                if (dstIP.contains("net1")) {
-                    dstMAC = dstIPInfo[1];
-                    receiver = buildReceiver(forwardingTable, "net1");
-                } else if (dstIP.contains("net3")) {
-                    dstMAC = forwardingTable.get("net3").split(":")[0];
-                    receiver = buildReceiver(forwardingTable, "net3");
-                }
-            } else if (ID.equals("R2")) {
-                if (dstIP.contains("net3")) {
-                    dstMAC = dstIPInfo[1];
-                    receiver = buildReceiver(forwardingTable, "net3");
-                } else if (dstIP.contains("net1")) {
-                    dstMAC = forwardingTable.get("net1").split(":")[0];
-                    receiver = buildReceiver(forwardingTable, "net1");
-                }
-            }*/
-
             System.out.println("New Frame:");
             printFrame(srcMAC, dstMAC, srcIP, dstIP, message);
 

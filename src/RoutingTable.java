@@ -53,7 +53,7 @@ public class RoutingTable {
     }
 
     public void updateForwardingTable(String srcMAC, String message) {
-        System.out.println(DVTable);
+        System.out.println(forwardingTable);
         String neighborDVTableInfo = message.substring(3);
         String[] neighborDVTable = neighborDVTableInfo.substring(1, neighborDVTableInfo.length() - 1).trim().split(",");
 
